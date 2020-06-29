@@ -697,64 +697,6 @@ namespace projetTetris
 
 
         /// <summary>
-        /// check if a line was completed
-        /// </summary>
-        private void verifLigne()
-        {
-            bool isLineComplete = false; 
-
-            // check for every line if one is competed
-            for (int y = G_BYTETAILLETABAXEY - 1; y >= 0; y--, isLineComplete = false)
-            {
-                for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
-                {
-                    // break if found a case without label
-                    if (g_tab_labCarreInGame[x, y] == null)
-                    {
-                        isLineComplete = false;
-                        break;
-                    }
-
-                    isLineComplete = true;
-                }
-
-                // if he find a line completed dispose every label from it
-                if (isLineComplete)
-                {
-                    removeLigne(y);
-                }
-            }
-        }
-
-        /// <summary>
-        /// dispose and nullify the object on the line who was completed
-        /// </summary>
-        /// <param name="y"> the Y axis where the line is completed </param>
-        private void removeLigne(int y)
-        {
-            // add score to complete a line
-            ajoutCompteurScoreLignes(1000, 1);
-
-            for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
-            {
-                if (!this.IsDisposed)
-                {
-                    // if i dispose AND nullify its because i don't know why but when i use my block to move every label down it just keep seeing that the label still exist
-                    Invoke(new Action(() => g_tab_labCarreInGame[x, y].Dispose()));
-                    g_tab_labCarreInGame[x, y] = null;
-                }
-                else
-                {
-                    return;
-                }
-            }
-        }
-
-
-        ///////////////////////////////////////////////
-
-
-        /// <summary>
         /// will rotate the player figure
         /// </summary>
         private void rotationObjetJoueur()
@@ -860,6 +802,64 @@ namespace projetTetris
         }
 
 
+        ///////////////////////////////////////////////
+
+
+        /// <summary>
+        /// check if a line was completed
+        /// </summary>
+        private void verifLigne()
+        {
+            bool isLineComplete = false;
+
+            // check for every line if one is competed
+            for (int y = G_BYTETAILLETABAXEY - 1; y >= 0; y--, isLineComplete = false)
+            {
+                for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
+                {
+                    // break if found a case without label
+                    if (g_tab_labCarreInGame[x, y] == null)
+                    {
+                        isLineComplete = false;
+                        break;
+                    }
+
+                    isLineComplete = true;
+                }
+
+                // if he find a line completed dispose every label from it
+                if (isLineComplete)
+                {
+                    removeLigne(y);
+                }
+            }
+        }
+
+        /// <summary>
+        /// dispose and nullify the object on the line who was completed
+        /// </summary>
+        /// <param name="y"> the Y axis where the line is completed </param>
+        private void removeLigne(int y)
+        {
+            // add score to complete a line
+            ajoutCompteurScoreLignes(1000, 1);
+
+            for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
+            {
+                if (!this.IsDisposed)
+                {
+                    // if i dispose AND nullify its because i don't know why but when i use my block to move every label down it just keep seeing that the label still exist
+                    Invoke(new Action(() => g_tab_labCarreInGame[x, y].Dispose()));
+                    g_tab_labCarreInGame[x, y] = null;
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+
         ////////////////////////////////////////////////
 
 
@@ -875,7 +875,7 @@ namespace projetTetris
                 // loop through every line and check if there is a empty line with labels above
                 for (int y = G_BYTETAILLETABAXEY - 1; y >= 1; boolIsLineEmpty = true, y--)
                 {
-                    for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
+                    for (int x = 0; x < G_BYTETAILLETABAXEX; x++, boolIsLineEmpty = true)
                     {
                         if (g_tab_labCarreInGame[x, y] != null)
                         {
