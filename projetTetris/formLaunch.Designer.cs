@@ -36,6 +36,8 @@
             this.checkBoxFacile = new System.Windows.Forms.CheckBox();
             this.checkBoxMoyen = new System.Windows.Forms.CheckBox();
             this.checkBoxMusique = new System.Windows.Forms.CheckBox();
+            this.checkBoxSoftColor = new System.Windows.Forms.CheckBox();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblNomJoueur
@@ -51,6 +53,7 @@
             // txtBoxInputJoueur
             // 
             this.txtBoxInputJoueur.Location = new System.Drawing.Point(88, 88);
+            this.txtBoxInputJoueur.MaxLength = 30;
             this.txtBoxInputJoueur.Name = "txtBoxInputJoueur";
             this.txtBoxInputJoueur.Size = new System.Drawing.Size(100, 20);
             this.txtBoxInputJoueur.TabIndex = 1;
@@ -107,7 +110,7 @@
             // checkBoxMusique
             // 
             this.checkBoxMusique.AutoSize = true;
-            this.checkBoxMusique.Location = new System.Drawing.Point(212, 226);
+            this.checkBoxMusique.Location = new System.Drawing.Point(108, 249);
             this.checkBoxMusique.Name = "checkBoxMusique";
             this.checkBoxMusique.Size = new System.Drawing.Size(66, 17);
             this.checkBoxMusique.TabIndex = 7;
@@ -115,11 +118,35 @@
             this.checkBoxMusique.UseVisualStyleBackColor = true;
             this.checkBoxMusique.CheckedChanged += new System.EventHandler(this.checkBoxMusique_CheckedChanged);
             // 
+            // checkBoxSoftColor
+            // 
+            this.checkBoxSoftColor.AutoSize = true;
+            this.checkBoxSoftColor.Checked = true;
+            this.checkBoxSoftColor.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSoftColor.Location = new System.Drawing.Point(108, 272);
+            this.checkBoxSoftColor.Name = "checkBoxSoftColor";
+            this.checkBoxSoftColor.Size = new System.Drawing.Size(102, 17);
+            this.checkBoxSoftColor.TabIndex = 8;
+            this.checkBoxSoftColor.Text = "Couleur Douces";
+            this.checkBoxSoftColor.UseVisualStyleBackColor = true;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(97, 319);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(78, 31);
+            this.btnHelp.TabIndex = 9;
+            this.btnHelp.Text = "Aide";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
             // formLaunch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(284, 362);
+            this.Controls.Add(this.btnHelp);
+            this.Controls.Add(this.checkBoxSoftColor);
             this.Controls.Add(this.checkBoxMusique);
             this.Controls.Add(this.checkBoxMoyen);
             this.Controls.Add(this.checkBoxFacile);
@@ -147,5 +174,7 @@
         private System.Windows.Forms.CheckBox checkBoxFacile;
         private System.Windows.Forms.CheckBox checkBoxMoyen;
         private System.Windows.Forms.CheckBox checkBoxMusique;
+        private System.Windows.Forms.CheckBox checkBoxSoftColor;
+        private System.Windows.Forms.Button btnHelp;
     }
 }

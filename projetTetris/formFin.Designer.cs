@@ -35,6 +35,7 @@
             this.lblNbrLignes = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblLvlJoueur = new System.Windows.Forms.Label();
+            this.btnRestart = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblPlayerLost
@@ -97,11 +98,22 @@
             this.lblLvlJoueur.TabIndex = 4;
             this.lblLvlJoueur.Text = "Niveau : ";
             // 
+            // btnRestart
+            // 
+            this.btnRestart.Location = new System.Drawing.Point(101, 247);
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(78, 31);
+            this.btnRestart.TabIndex = 10;
+            this.btnRestart.Text = "Rejouer";
+            this.btnRestart.UseVisualStyleBackColor = true;
+            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
+            // 
             // formFin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(284, 302);
+            this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.lblLvlJoueur);
             this.Controls.Add(this.lblNbrLignes);
             this.Controls.Add(this.lblScore);
@@ -127,5 +139,6 @@
         private System.Windows.Forms.Label lblNbrLignes;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblLvlJoueur;
+        private System.Windows.Forms.Button btnRestart;
     }
 }

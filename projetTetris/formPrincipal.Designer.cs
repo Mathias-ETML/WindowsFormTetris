@@ -43,6 +43,7 @@
             // lblNomJoueur
             // 
             this.lblNomJoueur.AutoSize = true;
+            this.lblNomJoueur.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNomJoueur.Location = new System.Drawing.Point(12, 9);
             this.lblNomJoueur.Name = "lblNomJoueur";
             this.lblNomJoueur.Size = new System.Drawing.Size(64, 13);
@@ -52,27 +53,30 @@
             // lblPlayerScore
             // 
             this.lblPlayerScore.AutoSize = true;
-            this.lblPlayerScore.Location = new System.Drawing.Point(569, 74);
+            this.lblPlayerScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPlayerScore.Location = new System.Drawing.Point(486, 78);
             this.lblPlayerScore.Name = "lblPlayerScore";
-            this.lblPlayerScore.Size = new System.Drawing.Size(35, 13);
+            this.lblPlayerScore.Size = new System.Drawing.Size(45, 17);
             this.lblPlayerScore.TabIndex = 3;
             this.lblPlayerScore.Text = "Score";
             // 
             // lblLevel
             // 
             this.lblLevel.AutoSize = true;
-            this.lblLevel.Location = new System.Drawing.Point(569, 9);
+            this.lblLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLevel.Location = new System.Drawing.Point(486, 7);
             this.lblLevel.Name = "lblLevel";
-            this.lblLevel.Size = new System.Drawing.Size(33, 13);
+            this.lblLevel.Size = new System.Drawing.Size(42, 17);
             this.lblLevel.TabIndex = 4;
             this.lblLevel.Text = "Level";
             // 
             // lblLignes
             // 
             this.lblLignes.AutoSize = true;
-            this.lblLignes.Location = new System.Drawing.Point(569, 146);
+            this.lblLignes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLignes.Location = new System.Drawing.Point(486, 154);
             this.lblLignes.Name = "lblLignes";
-            this.lblLignes.Size = new System.Drawing.Size(38, 13);
+            this.lblLignes.Size = new System.Drawing.Size(50, 17);
             this.lblLignes.TabIndex = 5;
             this.lblLignes.Text = "Lignes";
             // 

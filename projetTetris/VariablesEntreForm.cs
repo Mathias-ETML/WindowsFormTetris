@@ -9,5 +9,8 @@
 
         public static float g_fltDifficulteJoueur = 1.0f;
         public static bool g_boolDoesPlayerWantMusic = false;
+
+        public static bool g_boolSoftColorsEnabled = false;
+        public static System.Collections.Generic.List<System.Threading.Thread> g_listThread = new System.Collections.Generic.List<System.Threading.Thread>();
     }
 }

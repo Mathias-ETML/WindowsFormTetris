@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing;
 using static projetTetris.VariablesEntreForm;
 
 namespace projetTetris
@@ -20,10 +21,13 @@ namespace projetTetris
         /// </summary>
         private void onStart()
         {
+            // yes the file is on a server but i am gonna put it in the ressource ( if i can )
             if (!File.Exists(@"K:\INF\Eleves\DemoMot\CIN1A\matrogey\Scores\musiqueTetris.wav"))
             {
                 checkBoxMusique.Visible = false;
             }
+
+            g_listThread.Add(Thread.CurrentThread);
         }
 
         /// <summary>
@@ -37,7 +41,9 @@ namespace projetTetris
             {
                 // prends le input du joueur
                 g_strNomJoueurInput = txtBoxInputJoueur.Text;
-                
+
+                setColor();
+
                 // demare le jeu sur un nouveau thread
                 Thread g_threadSecondForm = new Thread(launchGame);
                 g_threadSecondForm.SetApartmentState(ApartmentState.STA);
@@ -136,6 +142,30 @@ namespace projetTetris
             {
                 g_boolDoesPlayerWantMusic = false;
             }
+        }
+
+        /// <summary>
+        /// check if played want dark mode friendly
+        /// </summary>
+        private void setColor()
+        {
+            if (checkBoxSoftColor.Checked)
+            {
+                g_boolSoftColorsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// show the controls
+        /// </summary>
+        /// <param name="sender"> button </param>
+        /// <param name="e"> EventArgs </param>
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Deplacement : Flèche droite et gauche" +
+                "\nRotation : R" +
+                "\nDrop : Espace" +
+                "\nHelp : Escape ou H");
         }
     }
 }

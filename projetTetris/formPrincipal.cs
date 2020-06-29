@@ -4,22 +4,21 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using System.Media;
+using System.Threading.Tasks;
 using static projetTetris.VariablesEntreForm;
 using static projetTetris.VariablesPrincipales;
-using System.Threading.Tasks;
+using static projetTetris.Colors;
 
 namespace projetTetris
 {
     public partial class formJeu : Form
     {
-        // todo : faire 1 methode de deplacement d'objets pour les labels
-        // todo : roatu bugé quand tu rota et que t en bas          
         // presetation : par quoi j'ai commencé, comment j'ai fais quoi (genre rota) , particularitées, bugs, demo
-        // les bugs : colision avec bordure, rotaion dans les blocs, detection colision, clock principale, 
-        // TODO !!!! : Bouton help au début
+        // les bugs : colision avec bordure, rotaion dans les blocs, detection colision, clock principale, ( pour presentation )
 
         Objects.ObjectOfPlayer objectOfPlayer = new Objects.ObjectOfPlayer(null, false, false, true, 0, 0, 0, 0, 0);
         Objects.ObjectInReserve objectInReserve = new Objects.ObjectInReserve(0, 0, 0);
+        GameColors gameColors = new GameColors();
 
         /// <summary>
         /// initialisation of the form
@@ -35,17 +34,53 @@ namespace projetTetris
         /// initalisation of the variables, music ( if wanted ),  the timer, where the figures will spawn, 
         /// the text for the label, random for what figure will spawn, and the new thread for the game
         /// </summary>
-        private void onStart()
+        private void onStart()  
         {
             Random rnd = new Random();
 
+            // reset if player restart
+            g_boolStopThread = false;
+            g_tab_labCarreInGame = new Label[G_BYTETAILLETABAXEX, G_BYTETAILLETABAXEY];
+            g_byteFiguresSpawnCount = 0;
+            g_shrtIntervalTimer = 1000;
+
+            // add the thread to the list of thread to stop if player want to restart
+            g_listThread.Add(Thread.CurrentThread);
+
+            // enable music
             if (g_boolDoesPlayerWantMusic)
             {
                 musiqueTetris = new SoundPlayer(@"K:\INF\Eleves\DemoMot\CIN1A\matrogey\Scores\musiqueTetris.wav");
                 musiqueTetris.PlayLooping();
             }
 
+            // dark mode
+            if (g_boolSoftColorsEnabled)
+            {
+                // ty santiago :)
+                panZoneJeu.BackColor = Color.FromArgb(37, 37, 38);
+                panNextFigure.BackColor = Color.FromArgb(37, 37, 38);
+                this.BackColor = Color.FromArgb(45, 45, 48);
+
+                Font SoftFont = new Font("Consolas", 10, FontStyle.Bold);
+                lblNomJoueur.Font = new Font("Consolas", (float)8.25, FontStyle.Bold); ;
+                lblNomJoueur.ForeColor = Color.White;
+
+                lblLevel.Font = SoftFont;
+                lblLevel.ForeColor = Color.White;
+                lblLignes.Font = SoftFont;
+                lblLignes.ForeColor = Color.White;
+                lblPlayerScore.Font = SoftFont;
+                lblPlayerScore.ForeColor = Color.White;
+            }
+            // normal mode
+            else
+            {
+                gameColors.normalColors();
+            }
+
             // timer
+            graviteTimer = new System.Timers.Timer();
             graviteTimer.Elapsed += new ElapsedEventHandler(onUpdateAsync);
             graviteTimer.Interval = g_shrtIntervalTimer;
 
@@ -62,9 +97,11 @@ namespace projetTetris
             objectInReserve.ByteNumFigureSpawnViaFigureReserve = (byte)rnd.Next(7);
             
             // start game on a new thread
-            Thread g_threadSecondForm = new Thread(spawnFigureRandomReserve);
-            g_threadSecondForm.SetApartmentState(ApartmentState.STA);
-            g_threadSecondForm.Start();
+            Thread g_threadGame = new Thread(spawnFigureRandomReserve);
+            g_threadGame.SetApartmentState(ApartmentState.STA);
+            g_threadGame.Start();
+
+            g_listThread.Add(g_threadGame);
         }
 
         /// <summary>
@@ -81,7 +118,12 @@ namespace projetTetris
             temp.Width = G_BYTEWIDTHANDHEIGHTBLOCKS;
             temp.Height = G_BYTEWIDTHANDHEIGHTBLOCKS;
             temp.BackColor = color;
-            temp.BorderStyle = BorderStyle.FixedSingle;
+
+            // dark mode friendly
+            if (!g_boolSoftColorsEnabled)
+            {
+                temp.BorderStyle = BorderStyle.FixedSingle;
+            }
             temp.Location = new Point(G_BYTEWIDTHANDHEIGHTBLOCKS * X + panZoneJeu.Width/2 - G_BYTEWIDTHANDHEIGHTBLOCKS, G_BYTEWIDTHANDHEIGHTBLOCKS * Y);
 
             return temp;
@@ -104,7 +146,7 @@ namespace projetTetris
             {
                 for (byte x = 0; x < 2; x++)
                 {
-                    Label labCarre = cubeDesObjets(Color.Yellow, x, y);
+                    Label labCarre = cubeDesObjets(ConvertByteToColor(gameColors.Yellow), x, y);
 
                     creationFigures(labCarre, x, y, spawnDansReserve);
                 }
@@ -132,7 +174,7 @@ namespace projetTetris
             // loop to spawn labels in a certain position
             for (byte y = 0; y < 4; y++)
             {
-                Label labBatton = cubeDesObjets(Color.Pink, 0, y);
+                Label labBatton = cubeDesObjets(ConvertByteToColor(gameColors.Pink), 0, y);
 
                 creationFigures(labBatton, 0, y, spawnDansReserve);
             }
@@ -164,7 +206,7 @@ namespace projetTetris
                     // algo for the reversed " T "
                     if (x != 0 && y != 0 || x != 2 && y != 0 || x == 1)
                     {
-                        Label labT = cubeDesObjets(Color.Blue, x, y);
+                        Label labT = cubeDesObjets(ConvertByteToColor(gameColors.Blue), x, y);
 
                         creationFigures(labT, x, y, spawnDansReserve);
                     }
@@ -198,7 +240,7 @@ namespace projetTetris
                     // algo for the L
                     if (y != 0 && x != 0 || x != 1 && y != 0 || x == 2)
                     {
-                        Label labL = cubeDesObjets(Color.Red, x, y);
+                        Label labL = cubeDesObjets(ConvertByteToColor(gameColors.Red), x, y);
 
                         creationFigures(labL, x, y, spawnDansReserve);
                     }
@@ -232,7 +274,7 @@ namespace projetTetris
                     // algo for the inversed L
                     if (y != 0 && x != 2 || x != 1 && y != 0 || x == 0)
                     {
-                        Label labLSH = cubeDesObjets(Color.OrangeRed, x, y);
+                        Label labLSH = cubeDesObjets(ConvertByteToColor(gameColors.Orange), x, y);
 
                         creationFigures(labLSH, x, y, spawnDansReserve);
                     }
@@ -266,7 +308,7 @@ namespace projetTetris
                     // algo for the S
                     if (x != 0  && y != 0 || x != 2 && y != 1)
                     {
-                        Label labS = cubeDesObjets(Color.DarkSeaGreen, x, y);
+                        Label labS = cubeDesObjets(ConvertByteToColor(gameColors.DarkGreen), x, y);
 
                         creationFigures(labS, x, y, spawnDansReserve);
                     }
@@ -300,7 +342,7 @@ namespace projetTetris
                     // algo for the reversed S
                     if (x != 2 && y != 0 || x != 0 && y != 1)
                     {
-                        Label labSHS = cubeDesObjets(Color.Green, x, y);
+                        Label labSHS = cubeDesObjets(ConvertByteToColor(gameColors.Green), x, y);
 
                         creationFigures(labSHS, x, y, spawnDansReserve);
                     }
@@ -442,7 +484,7 @@ namespace projetTetris
         /// </summary>
         /// <param name="deplacementX"> where the player want to go on the X axis ( it need to be the width/height of a label, so 30 pixel ) </param>
         /// <param name="deplacementY"> where the player want to go on the Y axis ( it need to be the width/height of a label, so 30 pixel ) </param>
-        /// <returns> return if the player can move here </returns>
+        /// <returns> return if the player can move here via a boolean </returns>
         private bool canPlayerMoveHere(int deplacementX, int deplacementY)
         {
             // loop to check if every label moved with the XY axis input are in the playable zone and dont interfer with other objects
@@ -553,7 +595,7 @@ namespace projetTetris
             Random rnd = new Random();
 
             // spawn the last figure that the random " made "
-            spawnFigureZoneJeu();
+             spawnFigureZoneJeu();
 
             // make a new one
             objectInReserve.ByteNumFigureSpawnViaFigureReserve = (byte)rnd.Next(7);
@@ -720,69 +762,72 @@ namespace projetTetris
             // create a new buffer label to copy the rotaded figure and to check if the roation is possible
             Label[,] tab_labBufferCopyLabel = new Label[objectOfPlayer.ByteHateurFigureMaximal, objectOfPlayer.ByteHateurFigureMaximal];
 
-            if(!objectOfPlayer.BoolDidPlayerRotaded && !objectOfPlayer.BoolDoesPlayerNeedFullRotation)
+            if (objectOfPlayer.StrNameOfObject != "Carre")
             {
-                objectOfPlayer.BoolDidPlayerRotaded = true;
-
-                // loop to copy the figure into the buffer array
-                for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
+                if (!objectOfPlayer.BoolDidPlayerRotaded && !objectOfPlayer.BoolDoesPlayerNeedFullRotation)
                 {
-                    for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
-                    {
-                        // directly roate while looping
-                        tab_labBufferCopyLabel[y, objectOfPlayer.ByteHateurFigureMaximal - 1 - x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
-                    }
-                }
-            }
-            else if(objectOfPlayer.BoolDidPlayerRotaded && !objectOfPlayer.BoolDoesPlayerNeedFullRotation)
-            {
-                objectOfPlayer.BoolDidPlayerRotaded = false;
+                    objectOfPlayer.BoolDidPlayerRotaded = true;
 
-                // loop to copy the figure into the buffer array
-                for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
-                {
-                    for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
+                    // loop to copy the figure into the buffer array
+                    for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
                     {
-                        // directly roate while looping ad undo the rotation
-                        tab_labBufferCopyLabel[objectOfPlayer.ByteHateurFigureMaximal - 1 - y, x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
-                    }
-                }
-            }
-            else
-            {
-                // loop to copy the figure into the buffer array
-                for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
-                {
-                    for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
-                    {
-                        // directly roate while looping and because it only need 2 different position, we can use the same lopp to rotate
-                        tab_labBufferCopyLabel[y, objectOfPlayer.ByteHateurFigureMaximal - 1 - x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
-                    }
-                }
-            }
-
-            // check if the rotation is possible
-            if (rotationObjetJoueurIsLegal(tab_labBufferCopyLabel))
-            {
-                for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
-                {
-                    for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
-                    {
-                        // copy the bufer to the original array
-                        objectOfPlayer.Tab_bufferLabelRota[x, y] = tab_labBufferCopyLabel[x, y];
-
-                        // move every label who are in the original label
-                        if (objectOfPlayer.Tab_bufferLabelRota[x, y] != null)
+                        for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
                         {
-                            objectOfPlayer.Tab_bufferLabelRota[x, y].Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX, y * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeY);
+                            // directly roate while looping
+                            tab_labBufferCopyLabel[y, objectOfPlayer.ByteHateurFigureMaximal - 1 - x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
                         }
                     }
                 }
-            }
-            else
-            {
-                // else nullify the array
-                tab_labBufferCopyLabel = new Label[objectOfPlayer.ByteHateurFigureMaximal, objectOfPlayer.ByteHateurFigureMaximal];
+                else if (objectOfPlayer.BoolDidPlayerRotaded && !objectOfPlayer.BoolDoesPlayerNeedFullRotation)
+                {
+                    objectOfPlayer.BoolDidPlayerRotaded = false;
+
+                    // loop to copy the figure into the buffer array
+                    for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
+                    {
+                        for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
+                        {
+                            // directly roate while looping ad undo the rotation
+                            tab_labBufferCopyLabel[objectOfPlayer.ByteHateurFigureMaximal - 1 - y, x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
+                        }
+                    }
+                }
+                else
+                {
+                    // loop to copy the figure into the buffer array
+                    for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
+                    {
+                        for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
+                        {
+                            // directly roate while looping and because it only need 2 different position, we can use the same lopp to rotate
+                            tab_labBufferCopyLabel[y, objectOfPlayer.ByteHateurFigureMaximal - 1 - x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
+                        }
+                    }
+                }
+
+                // check if the rotation is possible
+                if (rotationObjetJoueurIsLegal(tab_labBufferCopyLabel))
+                {
+                    for (int y = 0; y < objectOfPlayer.ByteHateurFigureMaximal; y++)
+                    {
+                        for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
+                        {
+                            // copy the bufer to the original array
+                            objectOfPlayer.Tab_bufferLabelRota[x, y] = tab_labBufferCopyLabel[x, y];
+
+                            // move every label who are in the original label
+                            if (objectOfPlayer.Tab_bufferLabelRota[x, y] != null)
+                            {
+                                objectOfPlayer.Tab_bufferLabelRota[x, y].Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX, y * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeY);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // else nullify the array
+                    tab_labBufferCopyLabel = null;
+                }
             }
         }
 
@@ -801,7 +846,8 @@ namespace projetTetris
                     if (labelRotated[x, y] != null)
                     {
                         // check if is the playable zone and does not go into other figures
-                        if (x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX < 0 || x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX >= panZoneJeu.Width || 
+                        if (x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX < 0 || x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX >= panZoneJeu.Width ||
+                            y * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeY < 0 || y * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeY >= panZoneJeu.Height ||
                             g_tab_labCarreInGame[(x * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeX) / G_BYTEWIDTHANDHEIGHTBLOCKS, (y * G_BYTEWIDTHANDHEIGHTBLOCKS + objectOfPlayer.IntPosFigureAxeY) / G_BYTEWIDTHANDHEIGHTBLOCKS] != null)
                         {
                             return false;
@@ -827,7 +873,7 @@ namespace projetTetris
                 bool boolIsLineEmpty = false;
 
                 // loop through every line and check if there is a empty line with labels above
-                for (int y = G_BYTETAILLETABAXEY - 1; y >= 1; boolIsLineEmpty = false, y--)
+                for (int y = G_BYTETAILLETABAXEY - 1; y >= 1; boolIsLineEmpty = true, y--)
                 {
                     for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
                     {
@@ -836,17 +882,18 @@ namespace projetTetris
                             boolIsLineEmpty = false;
                             break;
                         }
-
-                        boolIsLineEmpty = true;
                     }
 
                     if (boolIsLineEmpty)
                     {
                         for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
                         {
+                            // check if the colum above have label
                             if (g_tab_labCarreInGame[x, y - 1] != null)
                             {
                                 moveObjetFlotant(y);
+
+                                // if i reset the Y location is because there is maybe 2 line that are empty
                                 y = G_BYTETAILLETABAXEY;
                                 break;
                             }
