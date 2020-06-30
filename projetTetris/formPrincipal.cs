@@ -124,6 +124,7 @@ namespace projetTetris
             {
                 temp.BorderStyle = BorderStyle.FixedSingle;
             }
+
             temp.Location = new Point(G_BYTEWIDTHANDHEIGHTBLOCKS * X + panZoneJeu.Width/2 - G_BYTEWIDTHANDHEIGHTBLOCKS, G_BYTEWIDTHANDHEIGHTBLOCKS * Y);
 
             return temp;
@@ -385,7 +386,7 @@ namespace projetTetris
             else
             {
                 // check if the labels spawn into an existing label
-                if (g_tab_labCarreInGame[(x * G_BYTEWIDTHANDHEIGHTBLOCKS + item.Location.X) / G_BYTEWIDTHANDHEIGHTBLOCKS, (y * G_BYTEWIDTHANDHEIGHTBLOCKS + item.Location.Y) / G_BYTEWIDTHANDHEIGHTBLOCKS] == null)
+                if (g_tab_labCarreInGame[item.Location.X / G_BYTEWIDTHANDHEIGHTBLOCKS, item.Location.Y / G_BYTEWIDTHANDHEIGHTBLOCKS] == null)
                 {
                     // put the labels into the array for rotation
                     objectOfPlayer.Tab_bufferLabelRota[x, y] = item;
@@ -741,7 +742,7 @@ namespace projetTetris
                     {
                         for (int x = 0; x < objectOfPlayer.ByteHateurFigureMaximal; x++)
                         {
-                            // directly roate while looping and because it only need 2 different position, we can use the same lopp to rotate
+                            // directly roate while looping and because it only need 2 different position, we can use the same loop to rotate
                             tab_labBufferCopyLabel[y, objectOfPlayer.ByteHateurFigureMaximal - 1 - x] = objectOfPlayer.Tab_bufferLabelRota[x, y];
                         }
                     }
@@ -934,7 +935,7 @@ namespace projetTetris
         private async void onUpdateAsync(object source, ElapsedEventArgs e)
         {
             // check if the player hit the bottom, left, right or object
-            if (!objectOfPlayer.List_labFigureJoueur[0].IsDisposed &&!g_boolStopThread && objectOfPlayer.List_labFigureJoueur.Count != 0 &&
+            if (!objectOfPlayer.List_labFigureJoueur[0].IsDisposed && !g_boolStopThread && objectOfPlayer.List_labFigureJoueur.Count != 0 &&
 
                 objectOfPlayer.List_labFigureJoueur[0].Location.Y + G_BYTEWIDTHANDHEIGHTBLOCKS < panZoneJeu.Height &&
                 objectOfPlayer.List_labFigureJoueur[1].Location.Y + G_BYTEWIDTHANDHEIGHTBLOCKS < panZoneJeu.Height &&
