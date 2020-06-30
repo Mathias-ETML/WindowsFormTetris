@@ -48,11 +48,13 @@ namespace projetTetris
         {
             public byte ByteNumFigureSpawnViaFigureReserve { get; set; }
             public List<System.Windows.Forms.Label> List_labFigureReserve { get; set; }
+            public string StrNameOfObject { get; set; }
 
-            public ObjectInReserve(byte byteNumFigureSpawnViaFigureReserve, int intPosFigureAxeX, int intPosFigureAxeY)
+            public ObjectInReserve(string strNameOfObject, byte byteNumFigureSpawnViaFigureReserve, int intPosFigureAxeX, int intPosFigureAxeY)
             {
                 ByteNumFigureSpawnViaFigureReserve = byteNumFigureSpawnViaFigureReserve;
                 List_labFigureReserve = new List<System.Windows.Forms.Label>();
+                StrNameOfObject = strNameOfObject;
             }
         }
     }

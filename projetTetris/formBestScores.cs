@@ -30,7 +30,7 @@ namespace projetTetris
             UInt64[] tab_uint64ScoreJoueursFichier = new UInt64[_g_byteNbrJoueurAfficher];
             string[] tab_strPlayerNames = new string[_g_byteNbrJoueurAfficher];
             string strBuffer = "";
-            sbyte byteWherePlayerBeatedOther = 6;
+            byte byteWherePlayerBeatedOther = 6;
 
             // take the score of each player
             for (int i = _g_byteNbrJoueurAfficher - 1; i >= 0; i--)
@@ -47,7 +47,7 @@ namespace projetTetris
             {
                 if (tab_uint64ScoreJoueursFichier[i] < g_uint64ScoreJoueur)
                 {
-                    byteWherePlayerBeatedOther = (sbyte)i;
+                    byteWherePlayerBeatedOther = (byte)i;
                     tab_uint64ScoreJoueursFichier[i] = g_uint64ScoreJoueur;
                     tab_strPlayerNames[i] = g_strNomJoueurInput;
                     break;

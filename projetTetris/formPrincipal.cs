@@ -16,8 +16,11 @@ namespace projetTetris
         // presetation : par quoi j'ai commencé, comment j'ai fais quoi (genre rota) , particularitées, bugs, demo
         // les bugs : colision avec bordure, rotaion dans les blocs, detection colision, clock principale, ( pour presentation )
 
+        // TODO : TXT IN RESSOURCE
+        // TODO : MUSIC FILE IN RESSOURCE ( if possible )
+
         Objects.ObjectOfPlayer objectOfPlayer = new Objects.ObjectOfPlayer(null, false, false, true, 0, 0, 0, 0, 0);
-        Objects.ObjectInReserve objectInReserve = new Objects.ObjectInReserve(0, 0, 0);
+        Objects.ObjectInReserve objectInReserve = new Objects.ObjectInReserve(null, 0, 0, 0);
         GameColors gameColors = new GameColors();
 
         /// <summary>
@@ -141,6 +144,10 @@ namespace projetTetris
             {
                 resetVariables(2, false, "Carre");
             }
+            else
+            {
+                objectInReserve.StrNameOfObject = "Carre";
+            }
 
             // loop to spawn labels in a certain position
             for (byte y = 0; y < 2; y++)
@@ -171,6 +178,10 @@ namespace projetTetris
             {
                 resetVariables(4, false, "Baton");
             }
+            else
+            {
+                objectInReserve.StrNameOfObject = "Baton";
+            }
 
             // loop to spawn labels in a certain position
             for (byte y = 0; y < 4; y++)
@@ -197,6 +208,10 @@ namespace projetTetris
             if (!spawnDansReserve)
             {
                 resetVariables(3, true, "T");
+            }
+            else
+            {
+                objectInReserve.StrNameOfObject = "T";
             }
 
             // loop to spawn labels in a certain position
@@ -232,6 +247,10 @@ namespace projetTetris
             {
                 resetVariables(3, true, "L");
             }
+            else
+            {
+                objectInReserve.StrNameOfObject = "L";
+            }
 
             // loop to spawn labels in a certain position
             for (byte y = 0; y < 2; y++)
@@ -265,6 +284,10 @@ namespace projetTetris
             if (!spawnDansReserve)
             {
                 resetVariables(3, true, "SHL");
+            }
+            else
+            {
+                objectInReserve.StrNameOfObject = "SHL";
             }
 
             // loop to spawn labels in a certain position
@@ -300,6 +323,10 @@ namespace projetTetris
             {
                 resetVariables(3, false, "S");
             }
+            else
+            {
+                objectInReserve.StrNameOfObject = "S";
+            }
 
             // loop to spawn labels in a certain position
             for (byte y = 0; y < 2; y++)
@@ -333,6 +360,10 @@ namespace projetTetris
             if (!spawnDansReserve)
             {
                 resetVariables(3, false, "SHS");
+            }
+            else
+            {
+                objectInReserve.StrNameOfObject = "SHS";
             }
 
             // loop to spawn labels in a certain position
@@ -371,7 +402,23 @@ namespace projetTetris
             {
                 // put the labels into the list for the reserve
                 objectInReserve.List_labFigureReserve.Add(item);
-                item.Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS, y * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS);
+
+                // give more sence because the object where not centered
+                if (objectInReserve.StrNameOfObject == "Carre" || objectInReserve.StrNameOfObject == "Baton")
+                {
+                    if (objectInReserve.StrNameOfObject == "Carre")
+                    {
+                        item.Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS/2, y * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS/2);
+                    }
+                    else
+                    {
+                        item.Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS * 2, y * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS/2);
+                    }
+                }
+                else
+                {
+                    item.Location = new Point(x * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS, y * G_BYTEWIDTHANDHEIGHTBLOCKS + G_BYTEWIDTHANDHEIGHTBLOCKS);
+                }
 
                 if (InvokeRequired && !g_boolStopThread)
                 {
