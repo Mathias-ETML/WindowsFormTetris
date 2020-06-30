@@ -99,7 +99,6 @@ namespace projetTetris
             }
 
             // normal colors of System.Drawing.Color
-            // will return an 4 byte array of ARGB
             public void normalColors()
             {
                 Green = ColorToARGB(Color.Green);

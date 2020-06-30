@@ -892,7 +892,7 @@ namespace projetTetris
                             {
                                 moveObjetFlotant(y);
 
-                                // if i reset the Y location is because there is maybe 2 line that are empty
+                                // if i reset the Y location is because there is maybe 2 line that are empty ( or more )
                                 y = G_BYTETAILLETABAXEY;
                                 break;
                             }
