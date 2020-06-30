@@ -815,7 +815,7 @@ namespace projetTetris
             // check for every line if one is competed
             for (int y = G_BYTETAILLETABAXEY - 1; y >= 0; y--, isLineComplete = false)
             {
-                for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
+                for (int x = 0; x < G_BYTETAILLETABAXEX; x++, isLineComplete = true)
                 {
                     // break if found a case without label
                     if (g_tab_labCarreInGame[x, y] == null)
@@ -823,8 +823,6 @@ namespace projetTetris
                         isLineComplete = false;
                         break;
                     }
-
-                    isLineComplete = true;
                 }
 
                 // if he find a line completed dispose every label from it
@@ -884,11 +882,11 @@ namespace projetTetris
                         }
                     }
 
-                    if (boolIsLineEmpty)
+                    if (boolIsLineEmpty && y != 0)
                     {
+                        // check if the colum above have label
                         for (int x = 0; x < G_BYTETAILLETABAXEX; x++)
                         {
-                            // check if the colum above have label
                             if (g_tab_labCarreInGame[x, y - 1] != null)
                             {
                                 moveObjetFlotant(y);
